@@ -27,7 +27,7 @@ int main()
       //배열에 숫자를 넣는다.
     }
     //여기서 최대합을 찾아줘야한다
-    Maxsum[i]=Sumcount(array, 0, length-1);
+    Maxsum[i]=Sumcount(array, 0, length);
   } 
   
   // 생각한 알고리즘
@@ -82,12 +82,12 @@ int findFirst(int *arr, int fir, int last)
 }
 int findLast(int *arr,int fir , int last)
 {
-  for(int i=last;i>fir-1;i--)
+  for(int i=last-1;i>fir-1;i--)
   {
     if(arr[i]<0)
     {
        int sum =0;
-       for(int j=last; j>fir-1; j--)
+       for(int j=last; j>i-1; j--)
        {
          sum +=arr[j]; 
        }
