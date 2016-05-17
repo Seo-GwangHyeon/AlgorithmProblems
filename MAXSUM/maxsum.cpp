@@ -56,6 +56,7 @@ int Sumcount(int *array, int fir, int last)
   int F=findFirst(array, fir, last) ;
   int L=findLast(array,fir, last);    
   int sum=0;
+  cout<<F<<" "<<L<<endl;
   for(int i=F; i<L;i++)
      sum+=array[i];
   return sum;
@@ -78,6 +79,7 @@ int findFirst(int *arr, int fir, int last)
        else if(sum>=0)
          return fir;
     }
+     
   } 
   return fir;
 }
@@ -95,7 +97,7 @@ int findLast(int *arr,int fir , int last)
          sum +=arr[j]; 
        }
        if(sum<0)
-         return findLast(arr, fir, i-1); 
+         return findLast(arr, fir, i); 
        else if(sum>=0)
          return last;
     }
