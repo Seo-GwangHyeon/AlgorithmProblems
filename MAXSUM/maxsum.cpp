@@ -56,45 +56,48 @@ int Sumcount(int *array, int fir, int last)
   int F=findFirst(array, fir, last) ;
   int L=findLast(array,fir, last);    
   int sum=0;
-  for(int i=F; i<L+1;i++)
+  for(int i=F; i<L;i++)
      sum+=array[i];
   return sum;
 }
 
 int findFirst(int *arr, int fir, int last)
 {
+  int sum;
   for(int i=fir;i<last;i++)
   {
     if(arr[i]<0)
     {
-       int sum =0;
+       sum =0;
        for(int j=fir; j<i+1; j++)
        {
          sum +=arr[j]; 
        }
        if(sum<0)
-         findFirst(arr, i, last); 
-       else if(sum>0)
-         return i;
+         return findFirst(arr, i+1, last); 
+       else if(sum>=0)
+         return fir;
     }
   } 
   return fir;
 }
+
 int findLast(int *arr,int fir , int last)
 {
-  for(int i=last-1;i>fir-1;i--)
+  int sum;
+  for(int i=last-1;i>=fir;i--)
   {
     if(arr[i]<0)
     {
-       int sum =0;
-       for(int j=last; j>i-1; j--)
+       sum =0;
+       for(int j=last-1; j>=i; j--)
        {
          sum +=arr[j]; 
        }
        if(sum<0)
-         findLast(arr, fir, i); 
-       else if(sum>0)
-         return i;
+         return findLast(arr, fir, i-1); 
+       else if(sum>=0)
+         return last;
     }
   } 
   return last;
