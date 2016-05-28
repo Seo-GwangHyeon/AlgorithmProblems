@@ -54,7 +54,7 @@ int main()
 int Sumcount(int *array, int fir, int last)
 {
   int F=findFirst(array, fir, last) ;
-  int L=findLast(array,fir, last);    
+  int L=findLast(array,F, last);    
   int sum=0;
   cout<<F<<" "<<L<<endl;
   for(int i=F; i<L;i++)
@@ -63,7 +63,7 @@ int Sumcount(int *array, int fir, int last)
 }
 
 int findFirst(int *arr, int fir, int last)
-{
+{   //last는  배열의 길이 
   int sum;
   for(int i=fir;i<last;i++)
   {
