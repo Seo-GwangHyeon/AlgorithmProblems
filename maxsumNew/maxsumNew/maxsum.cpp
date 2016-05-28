@@ -2,10 +2,6 @@
 
 using namespace std;
 
-int Sumcount(int *array, int fir, int last);
-int findFirst(int *arr, int fir, int last);
-int findLast(int *arr, int fir, int last);
-
 
 int main()
 {
@@ -30,17 +26,7 @@ int main()
 		Maxsum[i] = Sumcount(array, 0, length);
 	}
 
-	// 생각한 알고리즘
-	//  우선 가장 중요한 키워드는 재귀 함수이다
-	//  앞에서 뒤로가며 음수를 체크해 음수가 나오면
-	// 입력한 첫위치부터 음수까지 더해 +- 판별 그리고 
-	// +이면 첫위치 그대로 -면 첫위치를 -다음위치로
-	// 그리고 마지막위치에서도 똑같이 마지막위치를 재설정한다
-	// 그리고 음수를 재귀함수를 사용하면 
-	// 최대 값이 나올것이다.
-
-
-
+	
 	//출력부
 	for (int i = 0; i<count; i++)
 	{
@@ -51,56 +37,4 @@ int main()
 
 }
 
-int Sumcount(int *array, int fir, int last)
-{
-	int F = findFirst(array, fir, last);
-	int L = findLast(array, F, last);
-	int sum = 0;
-	cout << F << " " << L << endl;
-	for (int i = F; i<L; i++)
-		sum += array[i];
-	return sum;
-}
-
-int findFirst(int *arr, int fir, int last)
-{   //last는  배열의 길이 
-	int sum;
-	for (int i = fir; i<last; i++)
-	{
-		if (arr[i]<0)
-		{
-			sum = 0;
-			for (int j = fir; j<i + 1; j++)
-			{
-				sum += arr[j];
-			}
-			if (sum<0)
-				return findFirst(arr, i + 1, last);
-			else if (sum >= 0)
-				return fir;
-		}
-
-	}
-	return fir;
-}
-
-int findLast(int *arr, int fir, int last)
-{
-	int sum;
-	for (int i = last - 1; i >= fir; i--)
-	{
-		if (arr[i]<0)
-		{
-			sum = 0;
-			for (int j = last - 1; j >= i; j--)
-			{
-				sum += arr[j];
-			}
-			if (sum<0)
-				return findLast(arr, fir, i);
-			else if (sum >= 0)
-				return last;
-		}
-	}
-	return last;
-}
+i
