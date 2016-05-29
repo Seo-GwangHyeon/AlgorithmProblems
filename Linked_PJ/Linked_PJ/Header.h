@@ -33,8 +33,8 @@ private:
 public:
 	LinkedQueue<T>()
 	{
-		front = NULL;//처음 탑 값 NULL
-		rear = front;
+		this->front = new LinkedNode<T>(0, NULL);
+		front->link = this->rear;
 	}
 	void Push(T pushll);
 	void Pop();

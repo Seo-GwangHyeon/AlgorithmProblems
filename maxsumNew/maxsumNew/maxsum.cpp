@@ -39,55 +39,50 @@ int main()
 	}
 
 	delete Maxsum;
-
+	return 0;
 }
 
 int sumCount(int *arr, int length)
 {
-	int fir = 0;
-	int last = length;
-	int sum = 0;
-	int maxSum = 0;
+	int fir = 0, last = length, sum = 0, maxSum = 0;
 	bool check = false; //전부 음수 인지 체크
 	for (int i = 0; i < length; i++)
 	{
 		if (arr[i] > 0)
+		{
 			check = true;//전부 음수이면 false 
-
+		}
 	}
 	if (check)
 	{
 		for (int i = 0; i < length; i++)
+		{
 			if (arr[i] > 0)
 			{
 				fir = i; break;
 			}
+		}
 		for (int i = length - 1; i >= 0; i--)
+		{
 			if (arr[i] > 0)
 			{
-				last = i + 1; break;
+				last = i; break;
 			}
-		for (int i = fir; i < last; i++)
+		}
+		for (int i = fir; i <= last; i++)
 		{
-			if (arr[i] >= 0)
+			sum += arr[i];
+			if (sum < 0)
 			{
-				sum += arr[i];
+				sum = 0;
+			}
+			if (sum > maxSum)
+			{
 				maxSum = sum;
 			}
-			else//음수 일때
-				if (sum + arr[i] < 0)
-				{
-					maxSum = sum;
-					sum = 0;
-				}
-				else
-				{
-					sum += arr[i];
-					maxSum = sum;
-				}
 		}
 		return maxSum;
 	}
 	else
-		return sum;
+		return 0;
 }

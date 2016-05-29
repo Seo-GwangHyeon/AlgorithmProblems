@@ -39,12 +39,15 @@ void LinkedQueue<T>::Push(T pushll)
 {
 	if (this->IsEmpty())
 	{
-		this->front = this->rear = new LinkedNode<T>(pushll, NULL);
+		//this->front->link = this->rear;
+		this->rear = new LinkedNode<T>(pushll, 0);
 	}
 	else
 	{
+		
 		this->rear->link = new LinkedNode<T>(pushll, NULL);//기존 rear의 링크를 새 rear로 설정하고 다음 값이 널 인 새 rear를 연결한다.
 		this->rear = this->rear->link;
+	//	
 
 	}
 }
@@ -53,22 +56,22 @@ template <class T>
 void LinkedQueue<T>::Pop()
 {
 	if (IsEmpty()) throw "Queue is empty. Cannot delete.";
-	LinkedNode<T> *delNode = front;
-	front = front->link;//탑을 빼고 기존 탑의 다음원소를 탑으로 변경한다.
+	LinkedNode<T> *delNode = front->link;
+	front->link = front->link->link;//탑을 빼고 기존 탑의 다음원소를 탑으로 변경한다.
 	delete delNode;//탑을 해제한다.
 }
 
 template <class T>
 bool LinkedQueue<T>::IsEmpty() const// 비어있으면 true값을 출력한다.
 {
-	return front == rear;
+	return front->link== rear;
 }
 
 template <class T>// 전체 원소 출력
 void LinkedQueue<T>::Print() const
 {
-	LinkedNode<T> *temp = this->front;
-	while (temp ==NULL)
+	LinkedNode<T> *temp = this->front->link;
+	while (1)
 	{
 		cout << temp->data << " ";
 		temp = temp->link;
@@ -78,7 +81,7 @@ void LinkedQueue<T>::Print() const
 
 int main()
 {
-	LinkedStack<int> A;
+	/*LinkedStack<int> A;
 	for (int i = 0; i<15; i++)
 	{
 		A.Push(i + 1);
@@ -88,7 +91,7 @@ int main()
 	{
 		A.Pop();
 		A.Print();
-	}
+	}*/
 	LinkedQueue<int> b;
 	for (int i = 0; i<15; i++)
 	{
