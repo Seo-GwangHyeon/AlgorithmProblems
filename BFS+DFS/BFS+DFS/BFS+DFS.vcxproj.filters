@@ -15,6 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\光\개발한 프로그램들\비완성\BFS DFS\sample\g1.in">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="..\..\..\..\光\개발한 프로그램들\비완성\BFS DFS\sample\g3.in">
+      <Filter>소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\..\..\..\光\개발한 프로그램들\비완성\BFS DFS\sample\read-graph-adlist.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
