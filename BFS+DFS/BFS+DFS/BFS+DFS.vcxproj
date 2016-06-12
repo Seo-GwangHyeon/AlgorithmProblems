@@ -18,6 +18,14 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="인접리스트.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="인접행렬.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BAF450F-7CE4-40E9-A9DF-D81FAD47D314}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -141,14 +149,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\光\개발한 프로그램들\비완성\BFS DFS\sample\g1.in" />
-    <None Include="..\..\..\..\光\개발한 프로그램들\비완성\BFS DFS\sample\g3.in" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\..\光\개발한 프로그램들\비완성\BFS DFS\sample\read-graph-adlist.c" />
-    <ClCompile Include="..\..\..\..\光\개발한 프로그램들\비완성\BFS DFS\sample\read-graph-matrix.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
