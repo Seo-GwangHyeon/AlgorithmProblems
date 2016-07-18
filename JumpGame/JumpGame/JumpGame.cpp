@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stack>
 using namespace std;
+
 int matrix[100][100];
 bool matrix_enable[100][100];
 bool Check(int size);
@@ -29,7 +30,7 @@ int main()
 
 		//여기서 결과 입력
 		result[i] = Check(size);
-	//	cout << endl;
+		cout << endl;
 	}
 
 	for (int i = 0; i < count; i++)
@@ -61,18 +62,11 @@ bool Check(int size)
 	temp.x = current_x;
 	temp.y = current_y;
 	stk.push(temp);
+	int i = 0;
 	while ((matrix[current_y][current_x] !=0)&&!stk.empty())
 	{
-
-		if (right_en && (matrix_enable[current_y][current_x + matrix[stk.top().y][stk.top().x]]))
-			current_x += matrix[stk.top().y][stk.top().x];
-		else if (down_en && (matrix_enable[current_y + matrix[stk.top().y][stk.top().x]][current_x]))
-			current_y += matrix[stk.top().y][stk.top().x];
-
-		if (current_x >= size&&current_y >= size)
+		if (current_x + matrix[stk.top().y][stk.top().x] >= size&&current_y + matrix[stk.top().y][stk.top().x] >= size)
 		{
-			current_x -= matrix[stk.top().y][stk.top().x];
-			current_y -= matrix[stk.top().y][stk.top().x];
 			stk.pop();
 
 			matrix_enable[stk.top().y][stk.top().x] = false;
@@ -80,32 +74,44 @@ bool Check(int size)
 			right_en = true;
 			continue;
 		}
-		if (current_x >= size)
+		if (current_x + matrix[stk.top().y][stk.top().x] >= size)
 		{
-			current_x -= matrix[stk.top().y][stk.top().x];
-			matrix_enable[stk.top().y][stk.top().x] = false;
+			//current_x -= matrix[stk.top().y][stk.top().x];
+		//	matrix_enable[stk.top().y][stk.top().x] = false;
 
-			stk.pop();
+		//	stk.pop();
 			down_en = true;
 			right_en = false;
-			continue;
+		//	continue;
 		}
-		if (current_y >= size)
+		if (current_y + matrix[stk.top().y][stk.top().x] >= size)
 		{
-			current_y -= matrix[stk.top().y][stk.top().x];
-			matrix_enable[stk.top().y][stk.top().x] = false;
-			stk.pop();
+		//	current_y -= matrix[stk.top().y][stk.top().x];
+		//	matrix_enable[stk.top().y][stk.top().x] = false;
+		//	stk.pop();
 			right_en = true;
 			down_en = false;
-			continue;
+		//	continue;
 		}
-		
-		
-		
-		temp.x = current_x;
-		temp.y = current_y;
-		stk.push(temp);
-		//cout << matrix[stk.top().y][stk.top().x] << " ";
+		if (right_en && (matrix_enable[stk.top().y][stk.top().x]))
+		{
+			current_x += matrix[stk.top().y][stk.top().x];
+			temp.x = current_x;
+			temp.y = current_y;
+			stk.push(temp);
+		}
+		else if (down_en && (matrix_enable[stk.top().y][stk.top().x]))
+		{
+			current_y += matrix[stk.top().y][stk.top().x];
+			temp.x = current_x;
+			temp.y = current_y;
+			stk.push(temp);
+		}
+		if (i < 100)
+		{
+			cout << "(" << stk.top().y << " " << stk.top().x << ") ";
+		}
+		i++;
 		
 	}
 	if ((matrix[current_y][current_x] == 0))
