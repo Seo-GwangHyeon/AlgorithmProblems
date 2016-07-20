@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F1263826-4C93-428A-8869-6C02F171158E}</ProjectGuid>
+    <ProjectGuid>{E38475AF-3A8A-402F-BA78-8DB89F78FEBA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>zerone</RootNamespace>
+    <RootNamespace>BaseBall</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -142,7 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="zeroOne.cpp" />
+    <ClCompile Include="baseball.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Text.txt" />

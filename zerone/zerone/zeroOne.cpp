@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 
 int main()
 {
+	ifstream cin;
+	cin.open("Text.txt");
 	string in_arr = "";
 	cin >> in_arr;
 	int count = 0, sum;
