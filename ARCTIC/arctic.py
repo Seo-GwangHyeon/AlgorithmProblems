@@ -10,4 +10,4 @@ for i in range (cases):
 		listY.append(b);
 	for j in range (bases):
 		for k in range (bases):
-			
+			listX[j]**2
