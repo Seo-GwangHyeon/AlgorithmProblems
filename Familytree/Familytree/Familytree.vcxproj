@@ -142,7 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FamilyTree.c" />
+    <ClCompile Include="FamilyTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="out.txt" />
