@@ -5,7 +5,7 @@ int main()
 {
 	int case_num = 0, Fnum = 0, count_num = 0, family[100000] = { 0, }, cntA = 0, cntB = 0;
 	stack<int> ListA,ListB;
-	int  finded = 0, numA = 0, numB = 0,u=0;
+	int   numA = 0, numB = 0,u=0;
 	scanf("%d", &case_num);
 	for (int i = 0; i < case_num; ++i)
 	{
