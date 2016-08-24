@@ -1,44 +1,33 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-using namespace std;
-
+#include <stdio.h>
 int main()
 {
-	ifstream cin;
-	cin.open("Text.txt");
-	string in_arr = "";
-	cin >> in_arr;
+	int in_arr[100000] = { 0, };
 	int count = 0, sum;
-	bool result[100000] = { 0, };
-	cin >> count;
 	int start = 0, end = 0, temp = 0;
+	scanf("%s", (in_arr));
+	scanf("%d", &count);
 	for (int i = 0; i < count; i++)
 	{
-		cin >> start; cin >> end;
+		scanf("%d", &start); scanf("%d", &end);
 		if (start > end)
 		{
 			temp = start;
 			start = end;
 			end = temp;
 		}
-		sum = 0;
+		sum = in_arr[start];
 		for (int j = start; j <= end; j++)
 		{
-			if (in_arr[j] == '1')
-				sum += 1;
+			if (sum != in_arr[j])
+			{
+				sum = -1;
+				break;
+			}
 		}
-		if (sum == 0 || sum == end-start+1)
-			result[i] = true;
+		if (sum==-1)
+			puts("No");
 		else
-			result[i] = false;
-	}
-	for (int i = 0; i < count; i++)
-	{
-		if (result[i])
-			cout << "Yes" << endl;
-		else
-			cout << "No" << endl;
+			puts("Yes");
 	}
 	return 0;
 }
