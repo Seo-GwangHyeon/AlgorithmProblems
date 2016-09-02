@@ -1,33 +1,49 @@
-#include <stdio.h>
+#include <iostream>
+#include<stdio.h>
+#include <vector>
+using namespace std;
+
 int main()
 {
-	int in_arr[100000] = { 0, };
-	int count = 0, sum;
+	vector<int> v;
+	int numb = 0, sum=0;
+	char prev = ' ';
 	int start = 0, end = 0, temp = 0;
-	scanf("%s", (in_arr));
-	scanf("%d", &count);
-	for (int i = 0; i < count; i++)
+	int count = 0;
+	char now=' ' ;
+	prev=getchar();
+	while (prev!='\n')
 	{
-		scanf("%d", &start); scanf("%d", &end);
-		if (start > end)
+		now = getchar();
+		if (prev != now)
 		{
-			temp = start;
-			start = end;
-			end = temp;
+			v.push_back(numb+1);
 		}
-		sum = in_arr[start];
-		for (int j = start; j <= end; j++)
-		{
-			if (sum != in_arr[j])
+		prev=now;
+		numb++;
+	}
+		cin >> count;
+	
+		while (count--) {
+		
+			cin >> start; cin >> end;
+			if (start > end)
 			{
-				sum = -1;
-				break;
+				temp = start;
+				start = end;
+				end = temp;
+			}
+			
+			{
+				printf("Yes\n");
+				//break;
+			}
+		
+			{
+				printf("No\n");
+				//break;
 			}
 		}
-		if (sum==-1)
-			puts("No");
-		else
-			puts("Yes");
-	}
+	
 	return 0;
 }
