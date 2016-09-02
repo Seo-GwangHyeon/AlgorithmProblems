@@ -37,6 +37,7 @@ int main()
 		double min = 3000;
 		int temp_x = start_x;
 		int temp_y = start_y;
+		int min_pp = 0;
 		while (1)
 		{
 			if (distance(start_x, end_x, start_y, end_y) <= max_jump)
@@ -51,7 +52,7 @@ int main()
 				int sel_num = 0;
 				for (int k = 0; k < stone_num; k++)
 				{
-					if (distance(start_x, stone_x[k], start_y, stone_y[k]) <= max_jump)
+					if (distance(start_x, stone_x[k], start_y, stone_y[k]) <= max_jump&&!visited[k])
 					{
 						select[sel_num] = k;
 						sel_num++;
@@ -59,7 +60,7 @@ int main()
 				}
 				if (sel_num == 0)
 				{
-					cout << "break";
+					cout << "NO"<<endl;
 					break; break;
 				}
 				//end for
@@ -71,10 +72,11 @@ int main()
 					{
 						min = distance(end_x, stone_x[select[kk]], end_y, stone_y[select[kk]]);
 						start_x = stone_x[select[kk]];
-						start_y = stone_y[select[kk]];
+						start_y = stone_y[select[kk]]; min_pp = select[kk];
 					}
 				}
-				cout << start_x << " " << start_y << endl;
+				visited[min_pp] = 1;
+			//	cout << start_x << " " << start_y << endl;
 
 				//최소 구함
 			}
