@@ -46,7 +46,6 @@ int main()
 				break;
 			}
 
-		
 			else
 			{
 				int sel_num = 0;
