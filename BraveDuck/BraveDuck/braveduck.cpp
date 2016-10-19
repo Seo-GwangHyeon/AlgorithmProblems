@@ -52,7 +52,7 @@ int main()
 				for (int k = 0; k < stone_num; k++)
 				{
 					if (distance(start_x, stone_x[k], start_y, stone_y[k]) <= max_jump&&!visited[k])
-					{
+					{//방문하지 않은 돌중 거리가 점프가능거리보다 작은 것들을 뽑는다.
 						select[sel_num] = k;
 						sel_num++;
 					}

@@ -11,3 +11,4 @@ for i in range (cases):
 	for j in range (bases):
 		for k in range (bases):
 			listX[j]**2
+			
