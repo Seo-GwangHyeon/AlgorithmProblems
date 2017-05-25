@@ -39,10 +39,11 @@
 struct node
 {
 	int data;
-	struct node *right, *left;
+	struct node *right;
+	struct node	*left;
 };
 
-void insert(int id);
+void insert(struct node *tree,int id);
 void delete(id);
 int count();
 int height();
@@ -52,40 +53,72 @@ int min_order(id);
 void near(id);
 void quit();
 
-
+void init(struct node *tree,int id);
 
 
 int main()
 {
-	
-	return 0;
+	static struct node *aa = NULL;
+	int arr1[] = { 2,1,7,8,6,3,5,4 };
+	for (int i = 0; i < 8; i++)
+	{
+		printf("*****%d*****\n", arr1[i]);
+		_getch();
+		insert(aa, arr1[i]);
+		if (aa == NULL)
+		{
+			puts("널이면 앙대..");
+		}
+	}
+	printf("\n\n%d\n", aa->data);
+	return 0; 
 }
 
 
-void insert(int id)
+void insert(struct node* tree,int id)
 {
-	if (tree_count == 0)
+	if (tree == NULL)
 	{
-		root->data = id;
-		root->left = NULL;
-		root->right = NULL;
+		printf("NULL입니다");
+		_getch();
+		tree = (struct node*)malloc(sizeof(struct node));
+		tree->data = id;
+		tree->right = NULL;
+		tree->left = NULL;
+		printf("%d   ", tree->data);
+	//	_getch();
+		return;
 	}
 	else
 	{
-		if (root->data > id)
-		{
+		printf("else 들어옴\n");
 
+		if (tree->data > id)
+		{//id가 더작은 경우 왼쪽으로 가야함
+			printf("현재 id : %d\n", id);
+			printf("노드값 : %d\n", tree->data);
+			insert(tree->left,id);
+			return;
 		}
-		else if (root->data < id)
-		{
-
+		else if (tree->data < id)
+		{//id 가 더 큰경우 오른쪽 자식
+			printf("현재 id : %d\n", id);
+			printf("노드값 : %d\n", tree->data);
+			insert(tree->right, id);
+			return;
 		}
 		else
 		{//error message re typing
-
+			printf("에러 발생 임시로 \n");
 		}
 	}
 }
+
+void init(struct node *tree, int id)
+{
+
+}
+
 void delete(id)
 {
 
