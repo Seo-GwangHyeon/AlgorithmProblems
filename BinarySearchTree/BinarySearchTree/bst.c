@@ -24,10 +24,10 @@
 
 (7) Terminal(): 단말 node의 개수를 출력한다.
 
-(8) min_order(id) : id 값을 갖는 원소가 몇번째로 작은 원소인지 출력한다. 
+(8) min_order(id) : id 값을 갖는 원소가 몇번째로 작은 원소인지 출력한다.
 원소가 없을 경우에는 0을 출력한다.
 
-(9) near(id) : id 값은 BST에 없는 값이며, 출력하는 원소는 id 값과 가장 차이가 적은 원소를 출력한다. 
+(9) near(id) : id 값은 BST에 없는 값이며, 출력하는 원소는 id 값과 가장 차이가 적은 원소를 출력한다.
 차이 값이 같을 경우는 값이 작은 원소를 출력한다.
 
 (10) quit() : program을 끝낸다.
@@ -43,7 +43,7 @@ struct node
 	struct node	*left;
 };
 
-void insert(struct node *tree,int id);
+void insert(struct node *tree, int id);
 void delete(id);
 int count();
 int height();
@@ -53,7 +53,7 @@ int min_order(id);
 void near(id);
 void quit();
 
-void init(struct node *tree,int id);
+void init(struct node *tree, int id);
 
 
 int main()
@@ -71,11 +71,10 @@ int main()
 		}
 	}
 	printf("\n\n%d\n", aa->data);
-	return 0; 
+	return 0;
 }
 
-
-void insert(struct node* tree,int id)
+void insert(struct node* tree, int id)
 {
 	if (tree == NULL)
 	{
@@ -86,7 +85,7 @@ void insert(struct node* tree,int id)
 		tree->right = NULL;
 		tree->left = NULL;
 		printf("%d   ", tree->data);
-	//	_getch();
+		//	_getch();
 		return;
 	}
 	else
@@ -97,7 +96,7 @@ void insert(struct node* tree,int id)
 		{//id가 더작은 경우 왼쪽으로 가야함
 			printf("현재 id : %d\n", id);
 			printf("노드값 : %d\n", tree->data);
-			insert(tree->left,id);
+			insert(tree->left, id);
 			return;
 		}
 		else if (tree->data < id)
