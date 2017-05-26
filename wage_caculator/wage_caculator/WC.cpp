@@ -8,8 +8,8 @@
 #define MIN_MONEY 6470
 struct day_wage
 {
-	int year;//
-	int month;
+	int yr;//
+	int mon;
 	int start_time;//시작시간
 	int end_time;//끝난시간
 	int wage;
@@ -66,29 +66,28 @@ int main(void) {
 			day += totalday[i];
 			day %= 7; // year년 month월 1일의 시작 요일 
 		}
+		int whywhywhy = totalday[month];
+		printf("totalday[month] %d\n", totalday[month]);
 		for (i = -day; i < totalday[month]; i++)
 		{
-			if (i < 0)
-			{
-				days[i].date = -1;//일
-			}
-			else
+			if (i >= 0)
 			{
 				days[i].date = i + 1;//일
+
+				days[i].start_time = -1;
+				days[i].end_time = -1;
+				days[i].yr = year;
+					days[i].mon = month;
+				days[i].doweek = (i + day) % 7;//일별 요일 입력
+				printf("%d -month - %d  totalday[month] %d\n", i, month, totalday[month]);
 			}
-			days[i].start_time = -1;
-			days[i].end_time = -1;
-			days[i].year = year;
-			days[i].month = month;
-			days[i].doweek = (i + day) % 7;//일별 요일 입력
 		}
+		printf("totalday[month] %d\n", totalday[month]);
 		_getch();
 		//여기서부터 달력 출력
 		while (1)
 		{
 			//----여기 days 초기화 해야함
-
-
 			system("cls");
 			printf("\n %d년/ %d월\n\n", year, month); // year년 month월 타이틀 출력 
 
@@ -111,6 +110,7 @@ int main(void) {
 			{
 				SetConsoleTextAttribute(hc, 7);
 			}
+			printf("totalday[month] %d\n", totalday[month]);
 			print_calendar(day, totalday[month]);
 
 			key = _getch();
@@ -143,7 +143,7 @@ int main(void) {
 					//printf("%d", temp_day);
 					for (i = 0; i < 31; i++)
 					{
-						if (days[i].date == temp_day&&days[i].year == temp_year&&days[i].month == temp_month)
+						if (days[i].date == temp_day&&days[i].yr == temp_year&&days[i].mon == temp_month)
 						{
 							printf("TIME :    ~    \n");
 							gotoxy(8, 14);
