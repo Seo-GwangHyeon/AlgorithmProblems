@@ -8,12 +8,15 @@
 
 struct day_wage
 {
+	int year;//
+	int month;
 	int start_time;//시작시간
 	int end_time;//끝난시간
 	int date;//그날 날짜
 	int doweek;//요일
 };
 void print_calendar(int day,int dow);
+int str_to_int(char* str1, int a, int b);
 void gotoxy(int x, int y)
 {
 	COORD Pos = { x - 1, y - 1 };
@@ -26,23 +29,24 @@ int main(void) {
 	struct day_wage days[31];
 	int totalday[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 }; // 각 달의 총일 수 (첫번째 수는 제외) 
 	int lastyear, day, i;
-	int key,select;
+	int key, select;
+	int temp_day,temp_year,temp_month;
+	char str1[10]="";
+	char str2[15] = "";
 	select = 1;//초기 선택값 1로설정
 	HANDLE hc = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hc, 7);
 	system("cls");
 	while (1)
 	{
-		printf("몇년 몇월의 임금을 측정하시겠습니까?\n");
-		scanf("%d", &year);
-		if (year == -1)
+		printf("몇년 몇월의 임금을 측정하시겠습니까?(YYYY/MM)\n");
+		scanf("%s", str1);
+		if (str1[0] == 48)
 		{
 			break;
 		}
-		scanf("%d", &month);
-	
-	
-
+		year = str_to_int(str1, 0, 3);
+		month = str_to_int(str1,5,6);
 		//달력 만들기
 		if (month == 2 && leapyear(year))// 해당년도가 윤년이면, 2월은 총 29일 
 		{
@@ -72,6 +76,8 @@ int main(void) {
 			}
 			days[i].start_time = 0;
 			days[i].end_time = 0;
+			days[i].year = year;
+			days[i].month = month;
 			days[i].doweek = (i + day)%7;//일별 요일 입력
 		}
 		_getch();
@@ -104,11 +110,6 @@ int main(void) {
 			{
 				SetConsoleTextAttribute(hc, 7);
 			}
-			
-			SetConsoleTextAttribute(hc, 7);
-
-
-			
 			print_calendar(day, totalday[month]);
 			//if (kbhit())
 			{
@@ -134,7 +135,24 @@ int main(void) {
 					if (select == 1)
 					{//날짜입력 받기
 						printf("근무한 날짜입력 (YYYY/MM/DD):");
-						//scanf("")
+						scanf("%s", str2);
+						temp_year = str_to_int(str2, 0, 3);
+						temp_month = str_to_int(str2, 5, 6);
+						temp_day = str_to_int(str2, 8, 9);
+						//printf("%d", temp_day);
+						for (i = 0; i < 31; i++)
+						{
+							if (days[i].date == temp_day)
+							{
+								printf("시작시간: \n");
+								printf("끝난시간: ");
+								gotoxy(10,14);
+								_getch();
+								gotoxy(10, 15);
+								_getch();
+								
+							}
+						}
 					}
 					else if (select == 2)
 					{
@@ -174,4 +192,15 @@ void print_calendar(int day, int dow)
 		}
 	}
 	printf("\n\n");
+}
+int str_to_int(char* str1, int a, int b)
+{
+	int result = 0;
+	int ten = 1;
+	for (int i = b; i >= a; i--)
+	{
+		result += (str1[i]-48) * ten;
+		ten *= 10;
+	}
+	return result;
 }
