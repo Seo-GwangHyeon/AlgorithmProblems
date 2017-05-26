@@ -5,13 +5,14 @@
 #include <stdlib.h>
 #include <conio.h>
 #define leapyear(year) ((year)%4==0 && ( (year)%100!=0 || (year)%400==0 )) //윤년판정매크로 
-
+#define MIN_MONEY 6470
 struct day_wage
 {
 	int year;//
 	int month;
 	int start_time;//시작시간
 	int end_time;//끝난시간
+	int wage;
 	int date;//그날 날짜
 	int doweek;//요일
 };
@@ -27,11 +28,11 @@ int main(void) {
 
 	int year, month; // 연도와 월을 저장할 변수 
 	struct day_wage days[31];
-	int totalday[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 }; // 각 달의 총일 수 (첫번째 수는 제외) 
+	int totalday[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 }; // 각 달의 총일 수 (첫번째 수는 제외)  
 	int lastyear, day, i;
 	int key, select;
-	int temp_day,temp_year,temp_month;
-	char str1[10]="";
+	int temp_day, temp_year, temp_month;
+	char str1[10] = "";
 	char str2[15] = "";
 	select = 1;//초기 선택값 1로설정
 	HANDLE hc = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -39,6 +40,7 @@ int main(void) {
 	system("cls");
 	while (1)
 	{
+		
 		printf("몇년 몇월의 임금을 측정하시겠습니까?(YYYY/MM)\n");
 		scanf("%s", str1);
 		if (str1[0] == 48)
@@ -46,7 +48,7 @@ int main(void) {
 			break;
 		}
 		year = str_to_int(str1, 0, 3);
-		month = str_to_int(str1,5,6);
+		month = str_to_int(str1, 5, 6);
 		//달력 만들기
 		if (month == 2 && leapyear(year))// 해당년도가 윤년이면, 2월은 총 29일 
 		{
@@ -74,18 +76,18 @@ int main(void) {
 			{
 				days[i].date = i + 1;//일
 			}
-			days[i].start_time = 0;
-			days[i].end_time = 0;
+			days[i].start_time = -1;
+			days[i].end_time = -1;
 			days[i].year = year;
 			days[i].month = month;
-			days[i].doweek = (i + day)%7;//일별 요일 입력
+			days[i].doweek = (i + day) % 7;//일별 요일 입력
 		}
 		_getch();
 		//여기서부터 달력 출력
 		while (1)
 		{
 			//----여기 days 초기화 해야함
-			
+
 
 			system("cls");
 			printf("\n %d년/ %d월\n\n", year, month); // year년 month월 타이틀 출력 
@@ -100,7 +102,6 @@ int main(void) {
 				SetConsoleTextAttribute(hc, 7);
 			}
 
-
 			if (select == 2)
 			{
 				SetConsoleTextAttribute(hc, 12);
@@ -111,64 +112,165 @@ int main(void) {
 				SetConsoleTextAttribute(hc, 7);
 			}
 			print_calendar(day, totalday[month]);
-			//if (kbhit())
+
+			key = _getch();
+
+			if (key == 224)
 			{
 				key = _getch();
-				
-				if (key == 224)
-				{
-					key = _getch();
-					if (key == 75)
-					{//left
-						select = 1;
-						Sleep(100);
-					}
-					else if (key == 77)
-					{//right
-						select = 2;
-						Sleep(100);
-					}
+				if (key == 75)
+				{//left
+					select = 1;
+					Sleep(100);
 				}
-				else if (key == 13)
-				{
-					
-					if (select == 1)
-					{//날짜입력 받기
-						printf("근무한 날짜입력 (YYYY/MM/DD):");
-						scanf("%s", str2);
-						temp_year = str_to_int(str2, 0, 3);
-						temp_month = str_to_int(str2, 5, 6);
-						temp_day = str_to_int(str2, 8, 9);
-						//printf("%d", temp_day);
-						for (i = 0; i < 31; i++)
-						{
-							if (days[i].date == temp_day)
-							{
-								printf("시작시간: \n");
-								printf("끝난시간: ");
-								gotoxy(10,14);
-								_getch();
-								gotoxy(10, 15);
-								_getch();
-								
-							}
-						}
-					}
-					else if (select == 2)
-					{
-						system("cls");
-					}
+				else if (key == 77)
+				{//right
+					select = 2;
+					Sleep(100);
 				}
 			}
+			else if (key == 13)
+			{
+
+				if (select == 1)
+				{//날짜입력 받기
+					printf("근무한 날짜입력 (YYYY/MM/DD):");
+					scanf("%s", str2);
+					temp_year = str_to_int(str2, 0, 3);
+					temp_month = str_to_int(str2, 5, 6);
+					temp_day = str_to_int(str2, 8, 9);
+					int start, end;
+					//printf("%d", temp_day);
+					for (i = 0; i < 31; i++)
+					{
+						if (days[i].date == temp_day&&days[i].year == temp_year&&days[i].month == temp_month)
+						{
+							printf("TIME :    ~    \n");
+							gotoxy(8, 14);
+							scanf("%d", &start);
+							gotoxy(13, 14);
+							scanf("%d", &end);
+							days[i].start_time = start;
+							days[i].end_time = end;
+						}
+					}
+				}
+
+				else if (select == 2)
+				{//총임금 계산
+					int over_money = 0;
+					int weekend_money = 0;
+					int night_money = 0;
+					int base_money = 0;
+					int work_time_today = 0;
+					int work_time_tomorrow = 0;
+					int work_time_total = 0;
+					int work_time_sum = 0;
+					system("cls");
+					for (i = 0; i < 31; i++)
+					{
+						if (days[i].date != -1 && days[i].start_time != -1 && days[i].end_time != -1)
+						{
+							if (days[i].end_time>days[i].start_time)
+							{//
+								work_time_today = days[i].end_time - days[i].start_time;
+								work_time_tomorrow = 0;
+							}
+							else
+							{
+								work_time_today = 24 - days[i].start_time;
+								work_time_tomorrow = days[i].end_time;
+							}
+							work_time_total = work_time_today + work_time_tomorrow;
+							work_time_sum += work_time_total;
+							if (work_time_total > 0)
+							{//일 한날만 계산
+								base_money += work_time_total*MIN_MONEY;
+								if (work_time_total > 8)
+								{//초과수당
+									over_money += 0.5*(work_time_total - 8)*MIN_MONEY;
+								}
+								if (days[i].doweek == 5 && work_time_tomorrow > 0)
+								{//금요일 수당
+									weekend_money += 0.5*work_time_tomorrow*MIN_MONEY;
+								}
+								if (days[i].doweek == 6)
+								{//토요일 수당
+									weekend_money += 0.5*work_time_total*MIN_MONEY;
+								}
+								if (days[i].doweek == 0)
+								{//일요일 수당
+									weekend_money += 0.5*work_time_today*MIN_MONEY;
+								}
+								if (days[i].start_time <= 6 || days[i].start_time >= 22
+									|| days[i].end_time <= 6 || days[i].end_time >= 22)
+								{//야간수당
+									if (days[i].start_time <= 6 && days[i].end_time <= 6)
+									{//s<6 e<6
+										if (work_time_tomorrow == 0)
+										{//하루
+											night_money += 0.5*work_time_today*MIN_MONEY;
+										}
+										else
+										{//이틀
+											night_money += 0.5*(6 - work_time_today)*MIN_MONEY;
+											night_money += 0.5*(work_time_tomorrow)*MIN_MONEY;
+										}
+									}
+									else if (days[i].start_time <= 6 && days[i].end_time >= 22)
+									{//s<6 e>22
+										night_money += 0.5*(6 - days[i].start_time + 24 - days[i].end_time)*MIN_MONEY;
+									}
+									else if (days[i].start_time >= 22 && days[i].end_time <= 6)
+									{//s>22 e<6
+										night_money += 0.5*(24 - days[i].start_time + days[i].end_time)*MIN_MONEY;
+									}
+									else if (days[i].start_time >= 22 && days[i].end_time >= 22)
+									{//s>22 e>>22
+										if (work_time_tomorrow == 0)
+										{//하루
+											night_money += 0.5*work_time_today*MIN_MONEY;
+										}
+										else
+										{//이틀
+											night_money += 0.5*(work_time_today)*MIN_MONEY;
+											night_money += 0.5*(24 - days[i].end_time)*MIN_MONEY;
+										}
+
+									}
+								}
+							}
+						}
+					}//end for
+
+					printf("     총 일한시간 : %d\n", work_time_sum);
+					printf("     기본 월급   : %d\n", base_money);
+					printf("  초과 수당 합계 : %d\n", over_money);
+					printf("  야간 수당 합계 : %d\n", night_money);
+					printf("  휴일 수당 합계 : %d\n", weekend_money);
+					printf("-------------------------------\n");
+					printf("         총 월급 : %d\n", base_money + over_money + night_money + weekend_money);
+					_getch();
+
+
+
+				}
+			}//end enter
+
+			else if (key==27)
+			{
+				break;
+			}
+
 			//_getch();
-			
+
 
 			//임금 입력 넣을곳
-			
+
 
 		}
-		
-	
+
+
 	}
 
 	return 0;
@@ -200,6 +302,7 @@ int str_to_int(char* str1, int a, int b)
 	for (int i = b; i >= a; i--)
 	{
 		result += (str1[i]-48) * ten;
+		printf("result : %d\n", result);
 		ten *= 10;
 	}
 	return result;
