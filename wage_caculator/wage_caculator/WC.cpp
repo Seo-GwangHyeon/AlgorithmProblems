@@ -30,11 +30,24 @@ int main(void) {
 	struct day_wage days[31];//구조체 배열 사용
 	int MIN_MONEY = 0;
 	int totalday[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 }; // 각 달의 총일 수 (첫번째 수는 제외)  
+	double nights[48];
+		//0-1, 5-6,
 	int lastyear, day, i;
 	int key, select;
 	int temp_day, temp_year, temp_month;
 	char str1[10] = "";
 	char str2[15] = "";
+	for (int k = 0; k < 48; k++)
+	{//야간 수당 매핑
+		if (k % 24 < 6 || k % 24 >= 22)
+		{
+			nights[k] = 0.5;
+		}
+		else
+		{
+			nights[k] = 0;
+		}
+	}
 	HANDLE hc = GetStdHandle(STD_OUTPUT_HANDLE);//글자색 바꾸기 위해서
 	SetConsoleTextAttribute(hc, 7);//글자와 배경색을 default로 바꿈
 	system("cls");//새로고침
@@ -222,49 +235,14 @@ int main(void) {
 								if (days[i].start_time <= 6 || days[i].start_time >= 22
 									|| days[i].end_time <= 6 || days[i].end_time >= 22)
 								{//야간수당
-									if (days[i].start_time <= 6 && days[i].end_time <= 6)
-									{//s<6 e<6
-										if (work_time_tomorrow == 0)
-										{//하루
-											night_money += 0.5*work_time_today*MIN_MONEY;
-										}
-										else
-										{//이틀
-											night_money += 0.5*(6 - work_time_today)*MIN_MONEY;
-											night_money += 0.5*(work_time_tomorrow)*MIN_MONEY;
-										}
-									}
-									else if (days[i].start_time <= 6 && days[i].end_time >= 22)
-									{//s<6 e>22
-										night_money += 0.5*(6 - days[i].start_time + 24 - days[i].end_time)*MIN_MONEY;
-									}
-									else if (days[i].start_time >= 22 && days[i].end_time <= 6)
-									{//s>22 e<6
-										night_money += 0.5*(24 - days[i].start_time + days[i].end_time)*MIN_MONEY;
-									}
-									else if (days[i].start_time >= 22 && days[i].end_time >= 22)
-									{//s>22 e>>22
-										if (work_time_tomorrow == 0)
-										{//하루
-											night_money += 0.5*work_time_today*MIN_MONEY;
-										}
-										else
-										{//이틀
-											night_money += 0.5*(work_time_today)*MIN_MONEY;
-											night_money += 0.5*(24 - days[i].end_time)*MIN_MONEY;
-										}
-
-									}
-									else
+									int t_end_time = days[i].end_time;
+									if (days[i].start_time > days[i].end_time)
 									{
-										if (days[i].start_time <= 6&& days[i].end_time<22)
-										{
-											night_money += 0.5*(6 - days[i].start_time)*MIN_MONEY;
-										}
-										else if (days[i].start_time > 6 && days[i].end_time>=22)
-										{
-											night_money += 0.5*(2-(24- days[i].end_time))*MIN_MONEY;
-										}
+										t_end_time += 24;
+									}
+									for (int m = days[i].start_time; m < t_end_time; m++)
+									{
+										night_money += nights[m] * MIN_MONEY;
 									}
 								}
 							}
