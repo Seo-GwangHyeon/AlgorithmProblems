@@ -16,7 +16,7 @@ struct day_wage
 	int date;//그날 날짜
 	int doweek;//요일
 };
-void print_calendar(int day,int dow);
+int print_calendar(int day,int dow);
 int str_to_int(char* str1, int a, int b);
 void gotoxy(int x, int y)
 {
@@ -31,7 +31,7 @@ int main(void) {
 	int totalday[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 }; // 각 달의 총일 수 (첫번째 수는 제외)  
 	int lastyear, day, i;
 	int key, select;
-	int temp_day, temp_year, temp_month;
+	int temp_day, temp_year, temp_month,line_num;
 	char str1[10] = "";
 	char str2[15] = "";
 	//초기 선택값 1로설정
@@ -41,6 +41,7 @@ int main(void) {
 	while (1)
 	{
 		select = 1;
+		line_num = 0;
 		system("cls");
 		printf("몇년 몇월의 임금을 측정하시겠습니까?(YYYY/MM)\n");
 		scanf("%s", str1);
@@ -107,7 +108,7 @@ int main(void) {
 				SetConsoleTextAttribute(hc, 7);
 			}
 			
-			print_calendar(day, totalday[month]);
+			line_num = print_calendar(day, totalday[month]);
 
 			key = _getch();
 
@@ -142,9 +143,9 @@ int main(void) {
 						if (days[i].date == temp_day&&days[i].yr == temp_year&&days[i].mon == temp_month)
 						{
 							printf("TIME :    ~    \n");
-							gotoxy(8, 14);
+							gotoxy(8, 9+ line_num);
 							scanf("%d", &start);
-							gotoxy(13, 14);
+							gotoxy(13, 9+ line_num);
 							scanf("%d", &end);
 							days[i].start_time = start;
 							days[i].end_time = end;
@@ -276,14 +277,16 @@ int main(void) {
 
 	return 0;
 }
-void print_calendar(int day, int dow)
+int print_calendar(int day, int dow)
 {
+	int line_count = 0;
 	printf("\n  일  월  화  수  목  금  토"); // 요일 리스트 출력 
 	for (int i = -day; i < dow; i++)
 	{
 		if ((i + day) % 7 == 0) // 출력될 차례가 일요일이면, 개행 
 		{
 			printf("\n");
+			line_count++;
 		}
 		if (i < 0) // month월 1일이 출력되기 이전의 날짜는 공백으로 채운다. 
 		{
@@ -295,6 +298,7 @@ void print_calendar(int day, int dow)
 		}
 	}
 	printf("\n\n");
+	return line_count;
 }
 int str_to_int(char* str1, int a, int b)
 {
