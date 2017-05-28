@@ -76,7 +76,7 @@ int main(void) {
 				days[i].start_time = -1;
 				days[i].end_time = -1;
 				days[i].yr = year;
-					days[i].mon = month;
+				days[i].mon = month;
 				days[i].doweek = (i + day) % 7;//일별 요일 입력
 			}
 		}
