@@ -34,13 +34,14 @@ int main(void) {
 	int temp_day, temp_year, temp_month;
 	char str1[10] = "";
 	char str2[15] = "";
-	select = 1;//초기 선택값 1로설정
+	//초기 선택값 1로설정
 	HANDLE hc = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hc, 7);
 	system("cls");
 	while (1)
 	{
-		
+		select = 1;
+		system("cls");
 		printf("몇년 몇월의 임금을 측정하시겠습니까?(YYYY/MM)\n");
 		scanf("%s", str1);
 		if (str1[0] == 48)
@@ -66,8 +67,6 @@ int main(void) {
 			day += totalday[i];
 			day %= 7; // year년 month월 1일의 시작 요일 
 		}
-		int whywhywhy = totalday[month];
-		printf("totalday[month] %d\n", totalday[month]);
 		for (i = -day; i < totalday[month]; i++)
 		{
 			if (i >= 0)
@@ -79,18 +78,15 @@ int main(void) {
 				days[i].yr = year;
 					days[i].mon = month;
 				days[i].doweek = (i + day) % 7;//일별 요일 입력
-				printf("%d -month - %d  totalday[month] %d\n", i, month, totalday[month]);
 			}
 		}
-		printf("totalday[month] %d\n", totalday[month]);
-		_getch();
 		//여기서부터 달력 출력
 		while (1)
 		{
 			//----여기 days 초기화 해야함
 			system("cls");
-			printf("\n %d년/ %d월\n\n", year, month); // year년 month월 타이틀 출력 
-
+			printf("\n %d년/ %d월", year, month); // year년 month월 타이틀 출력 
+			puts("(뒤로가기 ESC, 뒤로가면 임금 초기화)\n");
 			if (select == 1)
 			{
 				SetConsoleTextAttribute(hc, 12);
@@ -110,7 +106,7 @@ int main(void) {
 			{
 				SetConsoleTextAttribute(hc, 7);
 			}
-			printf("totalday[month] %d\n", totalday[month]);
+			
 			print_calendar(day, totalday[month]);
 
 			key = _getch();
@@ -250,7 +246,12 @@ int main(void) {
 					printf("  휴일 수당 합계 : %d\n", weekend_money);
 					printf("-------------------------------\n");
 					printf("         총 월급 : %d\n", base_money + over_money + night_money + weekend_money);
-					_getch();
+					printf("프로그램 종료 ESC, 계속하기 ENTER\n");
+					key=_getch();
+					if (key == 27)
+					{//press esc
+						return 0;
+					}
 
 
 
@@ -258,7 +259,7 @@ int main(void) {
 			}//end enter
 
 			else if (key==27)
-			{
+			{//press esc
 				break;
 			}
 
@@ -302,7 +303,6 @@ int str_to_int(char* str1, int a, int b)
 	for (int i = b; i >= a; i--)
 	{
 		result += (str1[i]-48) * ten;
-		printf("result : %d\n", result);
 		ten *= 10;
 	}
 	return result;
