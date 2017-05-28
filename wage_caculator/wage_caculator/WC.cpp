@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #define leapyear(year) ((year)%4==0 && ( (year)%100!=0 || (year)%400==0 )) //윤년판정매크로 
-#define MIN_MONEY 6470
+
 struct day_wage
 {
 	int yr;//
@@ -16,7 +16,7 @@ struct day_wage
 	int date;//그날 날짜
 	int doweek;//요일
 };
-int print_calendar(int day,int dow);
+void print_calendar(int day,int dow);
 int str_to_int(char* str1, int a, int b);
 void gotoxy(int x, int y)
 {
@@ -28,10 +28,11 @@ int main(void) {
 
 	int year, month; // 연도와 월을 저장할 변수 
 	struct day_wage days[31];
+	int MIN_MONEY = 0;
 	int totalday[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 }; // 각 달의 총일 수 (첫번째 수는 제외)  
 	int lastyear, day, i;
 	int key, select;
-	int temp_day, temp_year, temp_month,line_num;
+	int temp_day, temp_year, temp_month;
 	char str1[10] = "";
 	char str2[15] = "";
 	//초기 선택값 1로설정
@@ -41,10 +42,19 @@ int main(void) {
 	while (1)
 	{
 		select = 1;
-		line_num = 0;
+		key = 0;
+		i = 0;
+		MIN_MONEY = 0;
+		for (i = 0; i < 31; i++)
+		{
+			days[i].start_time = -1;
+			days[i].end_time = -1;
+		}
 		system("cls");
 		printf("몇년 몇월의 임금을 측정하시겠습니까?(YYYY/MM)\n");
 		scanf("%s", str1);
+		printf("시간당 임금은 얼마인가요?(2017년 대한민국 최저임금 6470원)\n");
+		scanf("%d", &MIN_MONEY);
 		if (str1[0] == 48)
 		{
 			break;
@@ -102,13 +112,21 @@ int main(void) {
 			{
 				SetConsoleTextAttribute(hc, 12);
 			}
-			printf("(2)월급계산\n");
+			printf("(2)월급계산\t");
 			if (select == 2)
 			{
 				SetConsoleTextAttribute(hc, 7);
 			}
-			
-			line_num = print_calendar(day, totalday[month]);
+			if (select == 3)
+			{
+				SetConsoleTextAttribute(hc, 12);
+			}
+			printf("(3)근무시간 확인\n");
+			if (select == 3)
+			{
+				SetConsoleTextAttribute(hc, 7);
+			}
+			 print_calendar(day, totalday[month]);
 
 			key = _getch();
 
@@ -117,12 +135,14 @@ int main(void) {
 				key = _getch();
 				if (key == 75)
 				{//left
-					select = 1;
+					if(select>1)
+						select --;
 					Sleep(100);
 				}
 				else if (key == 77)
 				{//right
-					select = 2;
+					if(select<3)
+						select ++;
 					Sleep(100);
 				}
 			}
@@ -131,6 +151,7 @@ int main(void) {
 
 				if (select == 1)
 				{//날짜입력 받기
+					system("cls");
 					printf("근무한 날짜입력 (YYYY/MM/DD):");
 					scanf("%s", str2);
 					temp_year = str_to_int(str2, 0, 3);
@@ -143,9 +164,9 @@ int main(void) {
 						if (days[i].date == temp_day&&days[i].yr == temp_year&&days[i].mon == temp_month)
 						{
 							printf("TIME :    ~    \n");
-							gotoxy(8, 9+ line_num);
+							gotoxy(8, 2);
 							scanf("%d", &start);
-							gotoxy(13, 9+ line_num);
+							gotoxy(13, 2);
 							scanf("%d", &end);
 							days[i].start_time = start;
 							days[i].end_time = end;
@@ -235,18 +256,29 @@ int main(void) {
 										}
 
 									}
+									else
+									{
+										if (days[i].start_time <= 6&& days[i].end_time<22)
+										{
+											night_money += 0.5*(6 - days[i].start_time)*MIN_MONEY;
+										}
+										else if (days[i].start_time > 6 && days[i].end_time>=22)
+										{
+											night_money += 0.5*(2-(24- days[i].end_time))*MIN_MONEY;
+										}
+									}
 								}
 							}
 						}
 					}//end for
 
-					printf("     총 일한시간 : %d\n", work_time_sum);
-					printf("     기본 월급   : %d\n", base_money);
-					printf("  초과 수당 합계 : %d\n", over_money);
-					printf("  야간 수당 합계 : %d\n", night_money);
-					printf("  휴일 수당 합계 : %d\n", weekend_money);
+					printf("     총 일한시간 :%10d시간\n", work_time_sum);
+					printf("     기본 월급   :%10d원\n", base_money);
+					printf("  초과 수당 합계 :%10d원\n", over_money);
+					printf("  야간 수당 합계 :%10d원\n", night_money);
+					printf("  휴일 수당 합계 :%10d원\n", weekend_money);
 					printf("-------------------------------\n");
-					printf("         총 월급 : %d\n", base_money + over_money + night_money + weekend_money);
+					printf("         총 월급 :%10d원\n", base_money + over_money + night_money + weekend_money);
 					printf("프로그램 종료 ESC, 계속하기 ENTER\n");
 					key=_getch();
 					if (key == 27)
@@ -256,6 +288,24 @@ int main(void) {
 
 
 
+				}//end select 2
+				else if (select == 3)
+				{//근무시간 확인
+					system("cls");
+					printf("%d년 %d월 근무시간 확인\n", year, month);
+					int j = 1;
+					for (i = 0; i < 31; i++)
+					{
+						if (days[i].date != -1 && days[i].start_time != -1 && days[i].end_time != -1)
+						{
+							printf("%d) %d/%2d/%2d %2d시 ~ %2d시\n", j, year, month, days[i].date, 
+								days[i].start_time, days[i].end_time);
+							j++;
+						}
+					}
+					printf("Pres any key to continue...\n");
+					_getch();
+					
 				}
 			}//end enter
 
@@ -277,16 +327,14 @@ int main(void) {
 
 	return 0;
 }
-int print_calendar(int day, int dow)
+void print_calendar(int day, int dow)
 {
-	int line_count = 0;
 	printf("\n  일  월  화  수  목  금  토"); // 요일 리스트 출력 
 	for (int i = -day; i < dow; i++)
 	{
 		if ((i + day) % 7 == 0) // 출력될 차례가 일요일이면, 개행 
 		{
 			printf("\n");
-			line_count++;
 		}
 		if (i < 0) // month월 1일이 출력되기 이전의 날짜는 공백으로 채운다. 
 		{
@@ -298,7 +346,6 @@ int print_calendar(int day, int dow)
 		}
 	}
 	printf("\n\n");
-	return line_count;
 }
 int str_to_int(char* str1, int a, int b)
 {
