@@ -7,7 +7,7 @@
 #define leapyear(year) ((year)%4==0 && ( (year)%100!=0 || (year)%400==0 )) //윤년판정매크로 
 
 struct day_wage
-{
+{//구조체 사용
 	int yr;//
 	int mon;
 	int start_time;//시작시간
@@ -18,7 +18,7 @@ struct day_wage
 };
 void print_calendar(int day,int dow);
 int str_to_int(char* str1, int a, int b);
-void gotoxy(int x, int y)
+void gotoxy(int x, int y)//커서위치 바꾸는 함수
 {
 	COORD Pos = { x - 1, y - 1 };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
@@ -27,7 +27,7 @@ void gotoxy(int x, int y)
 int main(void) {
 
 	int year, month; // 연도와 월을 저장할 변수 
-	struct day_wage days[31];
+	struct day_wage days[31];//구조체 배열 사용
 	int MIN_MONEY = 0;
 	int totalday[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 }; // 각 달의 총일 수 (첫번째 수는 제외)  
 	int lastyear, day, i;
@@ -35,13 +35,12 @@ int main(void) {
 	int temp_day, temp_year, temp_month;
 	char str1[10] = "";
 	char str2[15] = "";
-	//초기 선택값 1로설정
-	HANDLE hc = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(hc, 7);
-	system("cls");
+	HANDLE hc = GetStdHandle(STD_OUTPUT_HANDLE);//글자색 바꾸기 위해서
+	SetConsoleTextAttribute(hc, 7);//글자와 배경색을 default로 바꿈
+	system("cls");//새로고침
 	while (1)
 	{
-		select = 1;
+		select = 1;	//초기 선택값 1로설정
 		key = 0;
 		i = 0;
 		MIN_MONEY = 0;
@@ -135,13 +134,13 @@ int main(void) {
 				key = _getch();
 				if (key == 75)
 				{//left
-					if(select>1)
+					if(select>1)//counter 사용
 						select --;
 					Sleep(100);
 				}
 				else if (key == 77)
 				{//right
-					if(select<3)
+					if(select<3)//counter 사용
 						select ++;
 					Sleep(100);
 				}
@@ -188,9 +187,9 @@ int main(void) {
 					for (i = 0; i < 31; i++)
 					{
 						if (days[i].date != -1 && days[i].start_time != -1 && days[i].end_time != -1)
-						{
+						{//유효한 날짜 를 찾기위해searching 사용
 							if (days[i].end_time>days[i].start_time)
-							{//
+							{
 								work_time_today = days[i].end_time - days[i].start_time;
 								work_time_tomorrow = 0;
 							}
@@ -200,12 +199,12 @@ int main(void) {
 								work_time_tomorrow = days[i].end_time;
 							}
 							work_time_total = work_time_today + work_time_tomorrow;
-							work_time_sum += work_time_total;
+							work_time_sum += work_time_total;// total 사용
 							if (work_time_total > 0)
 							{//일 한날만 계산
 								base_money += work_time_total*MIN_MONEY;
 								if (work_time_total > 8)
-								{//초과수당
+								{//초과수당 계산을위해 searching 사용
 									over_money += 0.5*(work_time_total - 8)*MIN_MONEY;
 								}
 								if (days[i].doweek == 5 && work_time_tomorrow > 0)
@@ -278,7 +277,7 @@ int main(void) {
 					printf("  야간 수당 합계 :%10d원\n", night_money);
 					printf("  휴일 수당 합계 :%10d원\n", weekend_money);
 					printf("-------------------------------\n");
-					printf("         총 월급 :%10d원\n", base_money + over_money + night_money + weekend_money);
+					printf("         총 월급 :%10d원\n", base_money + over_money + night_money + weekend_money);// total 사용
 					printf("프로그램 종료 ESC, 계속하기 ENTER\n");
 					key=_getch();
 					if (key == 27)
@@ -300,7 +299,7 @@ int main(void) {
 						{
 							printf("%d) %d/%2d/%2d %2d시 ~ %2d시\n", j, year, month, days[i].date, 
 								days[i].start_time, days[i].end_time);
-							j++;
+							j++;//counter 사용
 						}
 					}
 					printf("Pres any key to continue...\n");
@@ -348,7 +347,7 @@ void print_calendar(int day, int dow)
 	printf("\n\n");
 }
 int str_to_int(char* str1, int a, int b)
-{
+{//char array 입력을 위해 포인터 사용
 	int result = 0;
 	int ten = 1;
 	for (int i = b; i >= a; i--)
