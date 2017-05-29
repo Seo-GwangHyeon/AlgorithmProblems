@@ -11,7 +11,6 @@ typedef struct node {
 }NODE;
 NODE* queue[MAX];
 int front, rear;
-//int count;
 NODE* search(NODE *, int);
 void insert(NODE **, int);
 void delete(NODE **, int);
@@ -27,6 +26,8 @@ int main(void)
 	NODE *root = NULL;
 	int select = 0;
 	int temp_insert = 0, temp_delete = 0;
+
+	printf("-----------case 1 -----------\n");
 	insert(&root, 50);
 	insert(&root, 30);
 	insert(&root, 70);
@@ -37,35 +38,36 @@ int main(void)
 	insert(&root, 15);
 	insert(&root, 35);
 	insert(&root, 45);
-	printf("높이 %d\n", height(root));
-		printf("1) insert\n");
-		printf("2) delete\n");
-		printf("3) display(DFS)\n : ");
-		scanf("%d", &select);
-		printf("15 %d\n", in_order(root,15));
-		printf("25 %d\n", in_order(root, 25));
-		printf("30 %d\n", in_order(root, 30));
-		printf("near 32 %d\n", near(root, 32));
-		
-		if (select == 1)
-		{
-			scanf("%d", &temp_insert);
-			insert(&root, temp_insert);
-		}
-		else if (select == 2)
-		{
-			scanf("%d", &temp_delete);
-			delete(&root, temp_delete);
-		}
-		else if (select == 3)
-		{
-			level_order(root);
-			_getch();
-		}
-		else if(select==4)
-		{
-			printf("%d개의 노드\n",counter(root));
-		}
+	level_order(root);
+	printf("height %d\n", height(root));
+	printf("counter %d\n", counter(root));
+	printf("ancestor 45 \n" ); ancestor(root, 45);
+	printf("in_order 80 %d\n", in_order(root,80));
+	printf("near 28 %d\n", near(root,28));
+	printf("delete 15 25\n");
+	delete(&root, 15);
+	delete(&root, 25);
+	level_order(root);
+
+
+	printf("-----------case 2 -----------\n");
+	root = NULL;
+	insert(&root, 2);	insert(&root, 1);
+	insert(&root, 4);insert(&root, 7);
+	insert(&root, 8);
+	insert(&root, 6);
+	insert(&root, 5);
+	insert(&root, 3);
+	level_order(root);
+	printf("height %d\n", height(root));
+	printf("counter %d\n", counter(root));
+	printf("ancestor 5 \n"); ancestor(root, 5);
+	printf("in_order 5 %d\n", in_order(root, 5));
+	printf("near 13 %d\n", near(root, 13));
+	printf("delete 5 4\n");
+	delete(&root, 5);
+	delete(&root, 4);
+	level_order(root);
 
 	return 0;
 }
@@ -90,21 +92,19 @@ NODE* search(NODE *t, int id)
 void insert(NODE **t, int id)
 {
 	NODE *new_node = (NODE *)malloc(sizeof(NODE));
-	NODE *temp = *t; // temporary node.
+	NODE *temp = *t; 
 
 	new_node->id = id;
 	new_node->parent = NULL;
 	new_node->left = NULL;
 	new_node->right = NULL;
 
-	// if there is not any node.
 	if (temp == NULL)
 	{//빈 트리면 바로 new_node를 추가한다.
 		*t = new_node;
 		return;
 	}
 
-	// find the position that new node will be inserted.
 	while (temp != NULL)
 	{
 		new_node->parent = temp;//new_node가 parent를 가리키도록한다.
@@ -191,16 +191,15 @@ void delete(NODE **t, int id)
 		delete(&(del_node->left), temp->id);//그리고 원래위치에 값을 제거한다.
 	}
 }
-
+//큐 연산 push
 void push(NODE* node) {
 	if (rear == MAX - 1) {
 		return;
 	}
-
 	rear++;
 	queue[rear] = node;
 }
-
+//큐 연산 pop
 NODE* pop() {
 	NODE* node = NULL;
 
@@ -236,11 +235,12 @@ void level_order(NODE* root) {
 			push(temp->right);
 		}
 	}
+	printf("\n");
 }
 
 int counter(NODE * root)
 {
-	NODE* temp;
+	NODE* temp;//똑같이 순환해서 갯수를 측정한다
 	int sum = 0;
 	front = -1;
 	rear = -1;
@@ -266,8 +266,8 @@ int counter(NODE * root)
 void ancestor(NODE* root,int id)
 {
 	NODE *temp = NULL;
-	temp = search(root, id);
-	printf("%d의 조상\n", temp->id);
+	temp = search(root, id);//해당 노드를 찾아서
+	printf("%d의 조상\n", temp->id);//조상까지 올라간다
 	while (temp->parent != NULL)
 	{
 		printf("%d ", temp->parent->id);
@@ -278,14 +278,13 @@ void ancestor(NODE* root,int id)
 int height(NODE* root)
 {
 	int heig, hl, hr;
-
 	if (root == NULL) {
 		heig = -1;//루트만 있을때 높이 0이므로
 	}
 	else {
 		hl = height(root->left);
 		hr = height(root->right);
-		if (hl >= hr)
+		if (hl >= hr)//큰 child의 높이를 계산한다
 			heig = hl + 1;
 		else
 			heig = hr + 1;
@@ -306,7 +305,7 @@ int in_order(NODE* root, int id)
 	rear = -1;
 	if (root == NULL) {
 		return 0;
-	}
+	}//레벨순환을 해서 몇번째로 작은지 구한다
 	push(root);
 	while (1) {
 		temp = pop();
@@ -314,9 +313,8 @@ int in_order(NODE* root, int id)
 			break;
 		}
 		if (temp->id < id)
-		{
+		{//비교하는 부분
 			order++;
-			printf("%d order %d\n",id, order);
 		}
 		if (temp->left != NULL) {
 			push(temp->left);
@@ -338,7 +336,7 @@ int near(NODE* t, int id)
 	rear = -1;
 	if (t == NULL) {
 		return 0;
-	}
+	}//레벨 순환을 하여 가장 차가 적은 노드를 구한다
 	push(t);
 	while (1) {
 		temp = pop();
@@ -347,7 +345,7 @@ int near(NODE* t, int id)
 		}
 		temp_near = (temp->id > id ? temp->id - id : id - temp->id);
 		if (temp_near < near)
-		{
+		{//비교해서 that에 해당노드의 id값을 저장한다
 			near = temp_near;
 			that = temp->id;
 		}
@@ -361,6 +359,6 @@ int near(NODE* t, int id)
 	return that;
 }
 void quit()
-{
+{//종료
 	exit(0);
 }
