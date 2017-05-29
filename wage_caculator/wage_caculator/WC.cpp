@@ -232,19 +232,18 @@ int main(void) {
 								{//일요일 수당
 									weekend_money += 0.5*work_time_today*MIN_MONEY;
 								}
-								if (days[i].start_time <= 6 || days[i].start_time >= 22
-									|| days[i].end_time <= 6 || days[i].end_time >= 22)
-								{//야간수당
-									int t_end_time = days[i].end_time;
-									if (days[i].start_time > days[i].end_time)
-									{
-										t_end_time += 24;
-									}
-									for (int m = days[i].start_time; m < t_end_time; m++)
-									{
-										night_money += nights[m] * MIN_MONEY;
-									}
+
+								//야간수당
+								int t_end_time = days[i].end_time;
+								if (days[i].start_time > days[i].end_time)
+								{
+									t_end_time += 24;
 								}
+								for (int m = days[i].start_time; m < t_end_time; m++)
+								{
+									night_money += nights[m] * MIN_MONEY;
+								}
+
 							}
 						}
 					}//end for
