@@ -8,7 +8,7 @@
 
 3. 연산들
 
-(1) insert(id) : Data를 읽어서 BST에 삽입한다. 같은 data값ㅇ느 없다고 생각한다.
+(1) insert(id) : Data를 읽어서 BST에 삽입한다. 같은 data값은 없다고 생각한다.
 (입력값이 잘못 들어오면 error message를 출력하고 다시 입력받는다.
 
 (2) delete(id) : id 값을 삭제한다. id 값이 없을 경우 없다고 출력한다.
