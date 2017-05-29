@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
-
-#define MAX 100
+#include <stdlib.h>
+#define MAX 1000
 
 typedef struct node {
 	int id;
@@ -9,23 +9,44 @@ typedef struct node {
 	struct node *right;
 	struct node *parent;//parent
 }NODE;
-
+NODE* queue[MAX];
+int front, rear;
+//int count;
 NODE* search(NODE *, int);
 void insert(NODE **, int);
 void delete(NODE **, int);
-void display_node(NODE *);
-void display_level(NODE *);
+void level_order(NODE* root);
+int counter(NODE* root);
+void ancestor(NODE* root,int id);
+int height(NODE* root);
+int in_order(NODE*, int id);
+int near(NODE*,int id);
+void quit();
 int main(void)
 {
 	NODE *root = NULL;
 	int select = 0;
 	int temp_insert = 0, temp_delete = 0;
-	while (1)
-	{
+	insert(&root, 50);
+	insert(&root, 30);
+	insert(&root, 70);
+	insert(&root, 25);
+	insert(&root, 40);
+	insert(&root, 60);
+	insert(&root, 80);
+	insert(&root, 15);
+	insert(&root, 35);
+	insert(&root, 45);
+	printf("높이 %d\n", height(root));
 		printf("1) insert\n");
 		printf("2) delete\n");
 		printf("3) display(DFS)\n : ");
 		scanf("%d", &select);
+		printf("15 %d\n", in_order(root,15));
+		printf("25 %d\n", in_order(root, 25));
+		printf("30 %d\n", in_order(root, 30));
+		printf("near 32 %d\n", near(root, 32));
+		
 		if (select == 1)
 		{
 			scanf("%d", &temp_insert);
@@ -38,29 +59,14 @@ int main(void)
 		}
 		else if (select == 3)
 		{
-			display_node(root);
+			level_order(root);
 			_getch();
 		}
-		else
+		else if(select==4)
 		{
-			break;
+			printf("%d개의 노드\n",counter(root));
 		}
-	}
-	/*insert(&root, 50);
-	insert(&root, 30);
-	insert(&root, 70);
-	insert(&root, 25);
-	insert(&root, 40);
-	insert(&root, 60);
-	insert(&root, 80);
-	insert(&root, 15);
-	insert(&root, 35);
-	insert(&root, 45);
 
-	delete(&root, 30);
-	delete(&root, 50);
-
-	display_node(root);*/
 	return 0;
 }
 
@@ -77,7 +83,6 @@ NODE* search(NODE *t, int id)
 			t = t->right;
 		}
 	}
-
 	return t;
 }
 
@@ -174,53 +179,188 @@ void delete(NODE **t, int id)
 	{//2개의 child를 가지고 있는경우
 		del_node = temp;
 
-		temp = temp->right;
-		//right child중에
-		while (temp->left != NULL)
-		{//right child중에 가장 작은값을 찾는다.
-			temp = temp->left;
+		temp = temp->left;
+		//left child중에
+		while (temp->right != NULL)
+		{//left child중에 가장 큰값을 찾는다.
+			temp = temp->right;
 		}
 
 		del_node->id = temp->id;
-		//삭제하려는 노드에 ight child중에 가장 작은값 을 대입한다.
-		delete(&(del_node->right), temp->id);//그리고 원래위치에 값을 제거한다.
+		//삭제하려는 노드에 leftt child중에 가장 큰값 을 대입한다.
+		delete(&(del_node->left), temp->id);//그리고 원래위치에 값을 제거한다.
 	}
 }
-void display_level(NODE *t)
-{
-	NODE *queue = NULL;
-	if (t == NULL)
-	{
+
+void push(NODE* node) {
+	if (rear == MAX - 1) {
 		return;
 	}
 
+	rear++;
+	queue[rear] = node;
 }
 
-void display_node(NODE *t)
-{
-	if (t == NULL)
-	{
+NODE* pop() {
+	NODE* node = NULL;
+
+	if (front == rear) {
+		return node;
+	}
+	front++;
+	node = queue[front];
+	return node;
+}
+void level_order(NODE* root) {
+	NODE* temp;
+
+	front = -1;
+	rear = -1;
+	if (root == NULL) {
 		return;
 	}
 
-	printf("NODE [%d] > ", t->id);
+	push(root);
 
-	if (t->left != NULL)
-	{
-		printf("LEFT [%d] ", (t->left)->id);
+	while (1) {
+		temp = pop();
+		if (temp == NULL) {
+			break;
+		}
+
+		printf("%d ", temp->id);
+		if (temp->left != NULL) {
+			push(temp->left);
+		}
+		if (temp->right != NULL) {
+			push(temp->right);
+		}
 	}
-	if (t->right != NULL)
+}
+
+int counter(NODE * root)
+{
+	NODE* temp;
+	int sum = 0;
+	front = -1;
+	rear = -1;
+	if (root == NULL) {
+		return 0;
+	}
+	push(root);
+	while (1) {
+		temp = pop();
+		if (temp == NULL) {
+			break;
+		}
+		sum++;
+		if (temp->left != NULL) {
+			push(temp->left);
+		}
+		if (temp->right != NULL) {
+			push(temp->right);
+		}
+	}
+	return sum;
+}
+void ancestor(NODE* root,int id)
+{
+	NODE *temp = NULL;
+	temp = search(root, id);
+	printf("%d의 조상\n", temp->id);
+	while (temp->parent != NULL)
 	{
-		printf("RIGHT [%d]", (t->right)->id);
+		printf("%d ", temp->parent->id);
+		temp = temp->parent;
 	}
 	printf("\n");
+}
+int height(NODE* root)
+{
+	int heig, hl, hr;
 
-	if (t->left)
-	{
-		display_node(t->left);
+	if (root == NULL) {
+		heig = -1;//루트만 있을때 높이 0이므로
 	}
-	if (t->right)
-	{
-		display_node(t->right);
+	else {
+		hl = height(root->left);
+		hr = height(root->right);
+		if (hl >= hr)
+			heig = hl + 1;
+		else
+			heig = hr + 1;
 	}
+	return heig;
+}
+
+int in_order(NODE* root, int id)
+{
+	NODE* temp = search(root, id);
+	int order = 1;
+	if(temp ==NULL)
+	{//존재하지 않으면 0반환
+		return 0;
+	}
+	//존재하는경우
+	front = -1;
+	rear = -1;
+	if (root == NULL) {
+		return 0;
+	}
+	push(root);
+	while (1) {
+		temp = pop();
+		if (temp == NULL) {
+			break;
+		}
+		if (temp->id < id)
+		{
+			order++;
+			printf("%d order %d\n",id, order);
+		}
+		if (temp->left != NULL) {
+			push(temp->left);
+		}
+		if (temp->right != NULL) {
+			push(temp->right);
+		}
+	}
+	return order;
+}
+int near(NODE* t, int id)
+{
+	int near=100000000;
+	int that = 0;
+	int temp_near = 0;
+	NODE *temp;
+	//존재하는경우
+	front = -1;
+	rear = -1;
+	if (t == NULL) {
+		return 0;
+	}
+	push(t);
+	while (1) {
+		temp = pop();
+		if (temp == NULL) {
+			break;
+		}
+		temp_near = (temp->id > id ? temp->id - id : id - temp->id);
+		if (temp_near < near)
+		{
+			near = temp_near;
+			that = temp->id;
+		}
+		if (temp->left != NULL) {
+			push(temp->left);
+		}
+		if (temp->right != NULL) {
+			push(temp->right);
+		}
+	}
+	return that;
+}
+void quit()
+{
+	exit(0);
 }
